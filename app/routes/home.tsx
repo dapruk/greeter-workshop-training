@@ -1,6 +1,8 @@
 import type { Route } from "./+types/home";
 import { Welcome } from "../welcome/welcome";
 import { CardRenderer } from "~/components/card-renderer/card-renderer";
+import { useEffect, useState } from "react";
+import { UserForm } from "~/components/greeting/forms/user-form";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -43,12 +45,22 @@ const DUMMY_CARDS = [
 ];
 
 export default function Home() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const latestCard = DUMMY_CARDS.at(-1);
   const wallCards = DUMMY_CARDS.slice(0, -1);
   const countCard = wallCards.length;
 
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+
+    if (!user) {
+      setIsDialogOpen(true);
+    }
+  }, []);
+
   return (
     <div className="p-8">
+      <UserForm open={isDialogOpen} setOpen={setIsDialogOpen} />
       <div>
         <span className="inline-block px-2 py-0.5 bg-[#3ecf8e] text-[#005434] text-[12px] font-bold uppercase tracking-widest rounded-xs mb-3">
           Live Collaboration
