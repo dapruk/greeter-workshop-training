@@ -9,9 +9,9 @@ test("personalization for name", () => {
 });
 
 test("personalization for valid gender", () => {
-  const expectedResult = subtitles;
-
   const gender: "male" | "female" = "male";
+
+  const expectedResult = subtitles[gender];
 
   const result = genderSubtitles(gender);
 
