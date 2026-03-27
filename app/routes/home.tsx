@@ -19,10 +19,6 @@ export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
   return { ...serverData, ...res };
 }
 
-export function HydrateFallback() {
-  return <div>Loading...</div>;
-}
-
 export default function Home({ loaderData }: Route.ComponentProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState<{
