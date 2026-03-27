@@ -164,7 +164,7 @@ export function UserForm({ open, setOpen }: UserFormProps) {
                       {...field}
                       id={field.name}
                       aria-invalid={fieldState.invalid}
-                      placeholder="Rusdi"
+                      placeholder="Leave a message"
                       autoComplete="on"
                     />
                     {fieldState.invalid && (
