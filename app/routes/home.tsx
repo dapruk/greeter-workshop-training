@@ -1,56 +1,38 @@
-import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
-import { CardRenderer } from "~/components/card-renderer/card-renderer";
 import { useEffect, useState } from "react";
+import { CardRenderer } from "~/components/card-renderer/card-renderer";
 import { UserForm } from "~/components/greeting/forms/user-form";
 import { genderSubtitles, nameAnalyzer } from "~/lib/personalization";
+import { supabaseClient } from "~/lib/supabase-client";
+import type { Route } from "./+types/home";
 
-export function meta({ }: Route.MetaArgs) {
+export function meta({}: Route.MetaArgs) {
   return [
     { title: "New React Router App" },
     { name: "description", content: "Welcome to React Router!" },
   ];
 }
 
-const DUMMY_CARDS = [
-  {
-    id: 1,
-    name: "Raka Pratama",
-    text: "Selamat pagi! Semangat hari Jumat. Semoga kerjaan hari ini lancar dan weekend nanti bisa santai maksimal.",
-    gambar: "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=500&q=60",
-    // theme: "dark"
-    gender: "male"
-  },
-  {
-    id: 2,
-    name: "Dina Nabila",
-    text: "Halo! Jangan lupa istirahat sebentar kalau lagi stuck. Kadang solusi muncul pas kita lagi rehat sejenak.",
-    gambar: null,
-    // theme: "primary"
-    gender: "female"
+export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
+  const res = await supabaseClient.from("cards").select("*");
 
-  },
-  {
-    id: 3,
-    name: "Kevin Sanjaya",
-    text: "Semangat ngoding hari ini! Semoga semua test Jest-nya hijau dan nggak ada bug aneh yang nyelip.",
-    gender: "male"
+  const serverData = await serverLoader;
+  return { ...serverData, ...res };
+}
 
-  },
-  {
-    id: 4,
-    name: "Alya Putri",
-    text: "You're doing great! Apapun tantangannya hari ini, kamu pasti bisa melewatinya dengan baik.",
-    gender: "female"
-  }
-];
+export function HydrateFallback() {
+  return <div>Loading...</div>;
+}
 
-export default function Home() {
+export default function Home({ loaderData }: Route.ComponentProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [currentUser, setCurrentUser] = useState<{ name: string, gender: string } | null>(null);
-  const latestCard = DUMMY_CARDS.at(-1);
-  const wallCards = DUMMY_CARDS.slice(0, -1);
-  const countCard = wallCards.length;
+  const [currentUser, setCurrentUser] = useState<{
+    name: string;
+    gender: string;
+  } | null>(null);
+
+  const wallCards = loaderData.data;
+
+  const countCard = wallCards?.length;
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -78,29 +60,26 @@ export default function Home() {
         </h2>
       </div>
       <div className="flex w-full items-center justify-center">
-        {latestCard && (
+        {currentUser && (
           <CardRenderer
-            key={latestCard.id}
-            name={nameAnalyzer(latestCard.name)}
-            text={currentUser ? genderSubtitles(currentUser.gender as any) : latestCard.text}
-            gambar={latestCard.gambar}
-            gender={latestCard.gender as any}
+            key="latest"
+            name={nameAnalyzer(currentUser.name)}
+            text={
+              currentUser ? genderSubtitles(currentUser.gender as any) : "-"
+            }
           />
         )}
       </div>
       <div className="flex justify-between">
         <span>THE WALL</span>
         <span>{countCard} active notes</span>
-
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {wallCards.map((item) => (
+        {wallCards?.map((item) => (
           <CardRenderer
             key={item.id}
-            name={nameAnalyzer(item.name)}
-            text={genderSubtitles(item.gender as any)}
-            // gambar={null}
-            // theme={item.theme as any}
+            name={item.author}
+            text={item.message}
             gender={item.gender as any}
           />
         ))}

@@ -20,10 +20,12 @@ import {
 } from "~/components/ui/field";
 import { Input } from "~/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
+import { supabaseClient } from "~/lib/supabase-client";
 
 const UserFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
   gender: z.enum(["male", "female"]),
+  message: z.string().min(1, "Message is required"),
 });
 
 interface UserFormProps {
@@ -37,6 +39,7 @@ export function UserForm({ open, setOpen }: UserFormProps) {
     defaultValues: {
       name: "",
       gender: undefined,
+      message: "",
     },
   });
 
@@ -52,11 +55,25 @@ export function UserForm({ open, setOpen }: UserFormProps) {
     }
   }, [form]);
 
-  function onSubmit(data: z.infer<typeof UserFormSchema>) {
-    console.log(data);
+  async function onSubmit(data: z.infer<typeof UserFormSchema>) {
+    try {
+      const { error } = await supabaseClient.from("cards").insert({
+        author: data.name,
+        message: data.message,
+        gender: data.gender,
+      });
 
-    localStorage.setItem("user", JSON.stringify(data));
-    setOpen?.(false);
+      if (error) {
+        console.error("Error inserting data into Supabase:", error);
+        return;
+      }
+
+      localStorage.setItem("user", JSON.stringify(data));
+      setOpen?.(false);
+      window.location.reload();
+    } catch (err) {
+      console.error("Unexpected error during form submission:", err);
+    }
   }
 
   return (
@@ -135,12 +152,35 @@ export function UserForm({ open, setOpen }: UserFormProps) {
                 )}
               />
 
+              <Controller
+                name="message"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={field.name}>
+                      Leave a message
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id={field.name}
+                      aria-invalid={fieldState.invalid}
+                      placeholder="Rusdi"
+                      autoComplete="on"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
               <Button
                 type="submit"
                 size="lg"
-                className="justify-center w-50 h-12 rounded-lg text-lg uppercase bg-linear-to-r from-green-800 to-green-500 text-white"
+                disabled={form.formState.isSubmitting}
+                className="justify-center w-50 h-12 rounded-lg text-lg uppercase bg-linear-to-r from-green-800 to-green-500 text-white disabled:opacity-50"
               >
-                Submit
+                {form.formState.isSubmitting ? "Submitting..." : "Submit"}
               </Button>
             </form>
           </div>
