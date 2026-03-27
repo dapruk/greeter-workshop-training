@@ -60,6 +60,7 @@ export function UserForm({ open, setOpen }: UserFormProps) {
       const { error } = await supabaseClient.from("cards").insert({
         author: data.name,
         message: data.message,
+        gender: data.gender,
       });
 
       if (error) {
