@@ -69,6 +69,7 @@ export function UserForm({ open, setOpen }: UserFormProps) {
 
       localStorage.setItem("user", JSON.stringify(data));
       setOpen?.(false);
+      window.location.reload();
     } catch (err) {
       console.error("Unexpected error during form submission:", err);
     }
