@@ -40,6 +40,14 @@ export default function Onboarding() {
 
   return (
     <div className="p-8">
+      <div>
+        <span className="inline-block px-2 py-0.5 bg-[#3ecf8e] text-[#005434] text-[12px] font-bold uppercase tracking-widest rounded-xs mb-3">
+          Live Collaboration
+        </span>
+        <h2 className="font-headline text-4xl leading-tight font-extrabold tracking-tighter text-[#191c1c]">
+          Team <span className="text-[#006c45] italic">Celebration</span>
+        </h2>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {DUMMY_CARDS.map((item) => (
           <CardRenderer
