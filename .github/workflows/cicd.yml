@@ -5,12 +5,11 @@ jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
-      -name: checking out code
+      - name: checking out code
        uses: actions/checkout@v5
-      -name: build image
+      - name: build image
        run: docker build -t git.workshop.bteklabs.com/dapruk/greeter-app-cik:latest
-      -name: login to docker
+      - name: login to docker
        run: echo ${{BTEK_GIT_DEPLOYMENT_TOKEN}} | docker login --username dapruk --pasword-stdin git.workshop.bteklabs.com
-      -name: push image to registry
+      - name: push image to registry
        run: docker push git.workshop.bteklabs.com/dapruk/greeter-app-cik:latest
-       
