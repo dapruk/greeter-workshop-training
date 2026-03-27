@@ -10,6 +10,12 @@ jobs:
     steps:
       - name: checking out code
         uses: actions/checkout@v5
+      - name: creating env file
+        run: |
+          touch .env
+          echo VITE_SUPABASE_URL=${{secrets.VITE_SUPABASE_URL}} >> .env
+          echo VITE_SUPABASE_ANON_KEY=${{secrets.VITE_SUPABASE_ANON_KEY}} >> .env
+          cat .env
       - name: build image
         run: docker build . -t git.workshop.bteklabs.com/dapruk/greeter-app-cik:latest
       - name: login to docker
