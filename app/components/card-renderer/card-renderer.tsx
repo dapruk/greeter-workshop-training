@@ -5,9 +5,10 @@ interface CardRendererProps {
   text: string;
   gambar?: string | null;
   theme?: "dark" | "light" | "primary" | string | null;
+  gender?: 'male' | 'female';
 }
 
-export function CardRenderer({ name, text, gambar, theme }: CardRendererProps) {
+export function CardRenderer({ name, text, gambar, theme, gender }: CardRendererProps) {
   const greetings = [
     "Bonjour! ✨",
     "Hola! 👋",
@@ -35,7 +36,7 @@ export function CardRenderer({ name, text, gambar, theme }: CardRendererProps) {
         "bg-white text-slate-900 border-slate-200";
 
   return (
-    <Card className={`flex flex-col overflow-hidden shadow-sm transition-all hover:shadow-md ${themeClasses}`}>
+    <Card className={`flex flex-col overflow-hidden shadow-sm transition-all hover:shadow-md ${themeClasses} ${gender === 'female' ? 'bg-[#f2a6d2]' : 'bg-[#a6f2cf]'}`}>
       {gambar && (
         <img
           src={gambar}
@@ -48,13 +49,10 @@ export function CardRenderer({ name, text, gambar, theme }: CardRendererProps) {
         <span className="text-xs font-bold uppercase tracking-wider opacity-60">
           {randomGreeting}
         </span>
-
-        <h3 className="text-lg font-semibold leading-tight">
-          {name}
-        </h3>
-        <p className="text-sm opacity-80 leading-relaxed">
+        <p className="opacity-80 leading-relaxed text-[#247155] font-body text-lg font-medium ">
           {text}
         </p>
+        <span className="text-[10px] font-bold uppercase tracking-widest text-on-secondary-container opacity-60">-- {name}</span>
       </div>
     </Card>
   );

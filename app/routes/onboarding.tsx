@@ -15,28 +15,37 @@ const DUMMY_CARDS = [
     name: "Raka Pratama",
     text: "Selamat pagi! Semangat hari Jumat. Semoga kerjaan hari ini lancar dan weekend nanti bisa santai maksimal.",
     gambar: "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=500&q=60",
-    theme: "dark"
+    // theme: "dark"
+    gender: "male"
   },
   {
     id: 2,
     name: "Dina Nabila",
     text: "Halo! Jangan lupa istirahat sebentar kalau lagi stuck. Kadang solusi muncul pas kita lagi rehat sejenak.",
     gambar: null,
-    theme: "primary"
+    // theme: "primary"
+    gender: "female"
+
   },
   {
     id: 3,
     name: "Kevin Sanjaya",
-    text: "Semangat ngoding hari ini! Semoga semua test Jest-nya hijau dan nggak ada bug aneh yang nyelip."
+    text: "Semangat ngoding hari ini! Semoga semua test Jest-nya hijau dan nggak ada bug aneh yang nyelip.",
+    gender: "male"
+
   },
   {
     id: 4,
     name: "Alya Putri",
-    text: "You're doing great! Apapun tantangannya hari ini, kamu pasti bisa melewatinya dengan baik."
+    text: "You're doing great! Apapun tantangannya hari ini, kamu pasti bisa melewatinya dengan baik.",
+    gender: "female"
   }
 ];
 
 export default function Onboarding() {
+  const latestCard = DUMMY_CARDS.at(-1);
+  const wallCards = DUMMY_CARDS.slice(0, -1);
+  const countCard = wallCards.length;
 
   return (
     <div className="p-8">
@@ -48,14 +57,31 @@ export default function Onboarding() {
           Team <span className="text-[#006c45] italic">Celebration</span>
         </h2>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {DUMMY_CARDS.map((item) => (
+      <div className="flex w-full items-center justify-center">
+        {latestCard && (
+          <CardRenderer
+            key={latestCard.id}
+            name={latestCard.name}
+            text={latestCard.text}
+            gambar={latestCard.gambar}
+            gender={latestCard.gender as any}
+          />
+        )}
+      </div>
+      <div className="flex justify-between">
+        <span>THE WALL</span>
+        <span>{countCard} active notes</span>
+
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {wallCards.map((item) => (
           <CardRenderer
             key={item.id}
-            name={item.name}
+            name={item.id === 3 ? "Kevin Sanjaya" : item.name}
             text={item.text}
-            gambar={item.gambar}
-            theme={item.theme as any}
+            // gambar={null}
+            // theme={item.theme as any}
+            gender={item.gender as any}
           />
         ))}
       </div>
