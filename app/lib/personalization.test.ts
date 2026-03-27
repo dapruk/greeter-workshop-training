@@ -1,4 +1,5 @@
 import { genderSubtitles, nameAnalyzer, subtitles } from "./personalization";
+import { test, expect } from '@jest/globals';
 
 test("personalization for name", () => {
   const name = "Dapruk";
