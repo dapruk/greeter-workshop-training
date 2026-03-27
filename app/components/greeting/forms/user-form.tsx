@@ -1,0 +1,138 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { MenuSquareIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "~/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "~/components/ui/dialog";
+import {
+  Field,
+  FieldError,
+  FieldLabel,
+  FieldLegend,
+  FieldSet,
+} from "~/components/ui/field";
+import { Input } from "~/components/ui/input";
+import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
+
+const UserFormSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  gender: z.enum(["male", "female"]),
+});
+
+interface UserFormProps {
+  open: boolean;
+  setOpen?: (open: boolean) => void;
+}
+
+export function UserForm({ open, setOpen }: UserFormProps) {
+  const form = useForm<z.infer<typeof UserFormSchema>>({
+    resolver: zodResolver(UserFormSchema),
+    defaultValues: {
+      name: "",
+      gender: undefined,
+    },
+  });
+
+  function onSubmit(data: z.infer<typeof UserFormSchema>) {
+    console.log(data);
+
+    localStorage.setItem("user", JSON.stringify(data));
+    setOpen?.(false);
+  }
+
+  return (
+    <>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="min-w-125 py-4">
+          <DialogHeader className="flex flex-col items-center gap-4 justify-center drop-shadow-2xl">
+            <div className="bg-green-300 rounded-lg p-2 w-fit text-green-700">
+              <HugeiconsIcon icon={MenuSquareIcon} />
+            </div>
+            <DialogTitle className="text-4xl text-center font-bold">
+              Halo, Selamat Datang!
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="justify-center">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4 flex flex-col items-center"
+            >
+              <Controller
+                name="name"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                    <Input
+                      {...field}
+                      id={field.name}
+                      aria-invalid={fieldState.invalid}
+                      placeholder="Rusdi"
+                      autoComplete="on"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name="gender"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldSet className="w-full max-w-xs">
+                      <FieldLegend variant="label">Gender</FieldLegend>
+                      <RadioGroup
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <Field orientation="horizontal">
+                          <RadioGroupItem value="male" id="gender-male" />
+                          <FieldLabel
+                            htmlFor="gender-male"
+                            className="font-normal"
+                          >
+                            Male
+                          </FieldLabel>
+                        </Field>
+                        <Field orientation="horizontal">
+                          <RadioGroupItem value="female" id="gender-female" />
+                          <FieldLabel
+                            htmlFor="gender-female"
+                            className="font-normal"
+                          >
+                            Female
+                          </FieldLabel>
+                        </Field>
+                      </RadioGroup>
+                    </FieldSet>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <Button
+                type="submit"
+                size="lg"
+                className="justify-center w-50 h-12 rounded-lg text-lg uppercase bg-linear-to-r from-green-800 to-green-500 text-white"
+              >
+                Submit
+              </Button>
+            </form>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
