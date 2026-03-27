@@ -1,4 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { MenuSquareIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "~/components/ui/button";
@@ -47,13 +49,21 @@ export function UserForm({ open, setOpen }: UserFormProps) {
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Halo Selamat Datang!</DialogTitle>
+        <DialogContent className="min-w-125 py-4">
+          <DialogHeader className="flex flex-col items-center gap-4 justify-center drop-shadow-2xl">
+            <div className="bg-green-300 rounded-lg p-2 w-fit text-green-700">
+              <HugeiconsIcon icon={MenuSquareIcon} />
+            </div>
+            <DialogTitle className="text-4xl text-center font-bold">
+              Halo, Selamat Datang!
+            </DialogTitle>
           </DialogHeader>
 
-          <div>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <div className="justify-center">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4 flex flex-col items-center"
+            >
               <Controller
                 name="name"
                 control={form.control}
@@ -112,7 +122,13 @@ export function UserForm({ open, setOpen }: UserFormProps) {
                 )}
               />
 
-              <Button type="submit">Submit</Button>
+              <Button
+                type="submit"
+                size="lg"
+                className="justify-center w-50 h-12 rounded-lg text-lg uppercase bg-linear-to-r from-green-800 to-green-500 text-white"
+              >
+                Submit
+              </Button>
             </form>
           </div>
         </DialogContent>
