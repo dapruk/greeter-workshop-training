@@ -6,11 +6,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checking out code
-      uses: actions/checkout@v5
+        uses: actions/checkout@v5
       - name: build image
-      run: docker build -t git.workshop.bteklabs.com/dapruk/greeter-app-cik:latest
+        run: docker build -t git.workshop.bteklabs.com/dapruk/greeter-app-cik:latest
       - name: login to docker
-      run: echo ${{BTEK_GIT_DEPLOYMENT_TOKEN}} | docker login --username dapruk --pasword-stdin git.workshop.bteklabs.com
+        run: echo ${{secrets.BTEK_GIT_DEPLOYMENT_TOKEN}} | docker login --username dapruk --pasword-stdin git.workshop.bteklabs.com
       - name: push image to registry
-      run: docker push git.workshop.bteklabs.com/dapruk/greeter-app-cik:latest
-       
+        run: docker push git.workshop.bteklabs.com/dapruk/greeter-app-cik:latest
