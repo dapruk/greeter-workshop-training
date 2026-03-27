@@ -3,6 +3,7 @@ import { Welcome } from "../welcome/welcome";
 import { CardRenderer } from "~/components/card-renderer/card-renderer";
 import { useEffect, useState } from "react";
 import { UserForm } from "~/components/greeting/forms/user-form";
+import { genderSubtitles, nameAnalyzer } from "~/lib/personalization";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -46,15 +47,22 @@ const DUMMY_CARDS = [
 
 export default function Home() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState<{ name: string, gender: string } | null>(null);
   const latestCard = DUMMY_CARDS.at(-1);
   const wallCards = DUMMY_CARDS.slice(0, -1);
   const countCard = wallCards.length;
 
   useEffect(() => {
-    const user = localStorage.getItem("user");
-
-    if (!user) {
+    const storedUser = localStorage.getItem("user");
+    if (!storedUser) {
       setIsDialogOpen(true);
+    } else {
+      try {
+        setCurrentUser(JSON.parse(storedUser));
+      } catch (e) {
+        console.error("Gagal parse user", e);
+        setIsDialogOpen(true);
+      }
     }
   }, []);
 
@@ -73,8 +81,8 @@ export default function Home() {
         {latestCard && (
           <CardRenderer
             key={latestCard.id}
-            name={latestCard.name}
-            text={latestCard.text}
+            name={nameAnalyzer(latestCard.name)}
+            text={currentUser ? genderSubtitles(currentUser.gender as any) : latestCard.text}
             gambar={latestCard.gambar}
             gender={latestCard.gender as any}
           />
@@ -89,8 +97,8 @@ export default function Home() {
         {wallCards.map((item) => (
           <CardRenderer
             key={item.id}
-            name={item.id === 3 ? "Kevin Sanjaya" : item.name}
-            text={item.text}
+            name={nameAnalyzer(item.name)}
+            text={genderSubtitles(item.gender as any)}
             // gambar={null}
             // theme={item.theme as any}
             gender={item.gender as any}
