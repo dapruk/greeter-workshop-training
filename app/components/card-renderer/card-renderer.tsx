@@ -8,6 +8,32 @@ interface CardRendererProps {
   gender?: "male" | "female";
 }
 
+export const greetings = [
+  "Bonjour! ✨",
+  "Hola! 👋",
+  "Konnichiwa!",
+  "Annyeong!",
+  "Ciao!",
+  "Guten Tag!",
+  "Sawadee! ",
+  "Namaste! 🙏",
+  "Salam! 🌙",
+  "Ni Hao!",
+  "Privyet!",
+  "Olá!",
+  "Shalom! ✨",
+  "Kalimera! ☀️",
+  "Aloha! 🌺",
+  "Merhaba!",
+];
+
+export function randomGreeting() {
+  const randomGreeting =
+    greetings[Math.floor(Math.random() * greetings.length)];
+
+  return randomGreeting;
+}
+
 export function CardRenderer({
   name,
   text,
@@ -15,28 +41,6 @@ export function CardRenderer({
   theme,
   gender,
 }: CardRendererProps) {
-  const greetings = [
-    "Bonjour! ✨",
-    "Hola! 👋",
-    "Konnichiwa!",
-    "Annyeong!",
-    "Ciao!",
-    "Guten Tag!",
-    "Sawadee! ",
-    "Namaste! 🙏",
-    "Salam! 🌙",
-    "Ni Hao!",
-    "Privyet!",
-    "Olá!",
-    "Shalom! ✨",
-    "Kalimera! ☀️",
-    "Aloha! 🌺",
-    "Merhaba!",
-  ];
-
-  const randomGreeting =
-    greetings[Math.floor(Math.random() * greetings.length)];
-
   const themeClasses =
     theme === "dark"
       ? "bg-slate-800 text-white border-slate-700"
@@ -47,6 +51,7 @@ export function CardRenderer({
   return (
     <Card
       className={`flex flex-col overflow-hidden shadow-sm transition-all hover:shadow-md ${themeClasses} ${gender === "female" ? "bg-[#f2a6d2]" : "bg-[#a6f2cf]"}`}
+      data-testid="card-container"
     >
       {gambar && (
         <img
@@ -58,7 +63,7 @@ export function CardRenderer({
 
       <div className="p-5 flex flex-col gap-2">
         <span className="text-xs font-bold uppercase tracking-wider opacity-60">
-          {randomGreeting}
+          {randomGreeting()}
         </span>
         <p className="opacity-80 leading-relaxed text-[#247155] font-body text-lg font-medium ">
           {text}
