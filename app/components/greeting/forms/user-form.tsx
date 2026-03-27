@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MenuSquareIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "~/components/ui/button";
@@ -38,6 +39,18 @@ export function UserForm({ open, setOpen }: UserFormProps) {
       gender: undefined,
     },
   });
+
+  useEffect(() => {
+    const userStr = localStorage.getItem("user");
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        form.reset(user);
+      } catch (error) {
+        console.error("Failed to parse user from local storage", error);
+      }
+    }
+  }, [form]);
 
   function onSubmit(data: z.infer<typeof UserFormSchema>) {
     console.log(data);
