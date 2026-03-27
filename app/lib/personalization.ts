@@ -27,7 +27,7 @@ const nameAnalyzeMessages: Record<string, string> = {
   Z: "Zeroing in on success today with {name}!",
 };
 
-const subtitles: Record<"male" | "female", string[]> = {
+export const subtitles: Record<"male" | "female", string[]> = {
   male: [
     "Looking sharp today, sir.",
     "Ready to tackle the day?",
