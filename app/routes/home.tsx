@@ -32,8 +32,6 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
   const wallCards = loaderData.data;
 
-  console.log("wallcards", wallCards);
-
   const countCard = wallCards?.length;
 
   useEffect(() => {
@@ -81,7 +79,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           <CardRenderer
             key={item.id}
             name={item.author}
-            text={item.messsage}
+            text={item.message}
             gender={item.gender as any}
           />
         ))}
