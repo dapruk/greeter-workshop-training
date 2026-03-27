@@ -5,10 +5,16 @@ interface CardRendererProps {
   text: string;
   gambar?: string | null;
   theme?: "dark" | "light" | "primary" | string | null;
-  gender?: 'male' | 'female';
+  gender?: "male" | "female";
 }
 
-export function CardRenderer({ name, text, gambar, theme, gender }: CardRendererProps) {
+export function CardRenderer({
+  name,
+  text,
+  gambar,
+  theme,
+  gender,
+}: CardRendererProps) {
   const greetings = [
     "Bonjour! ✨",
     "Hola! 👋",
@@ -25,18 +31,23 @@ export function CardRenderer({ name, text, gambar, theme, gender }: CardRenderer
     "Shalom! ✨",
     "Kalimera! ☀️",
     "Aloha! 🌺",
-    "Merhaba!"
+    "Merhaba!",
   ];
 
-  const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)];
+  const randomGreeting =
+    greetings[Math.floor(Math.random() * greetings.length)];
 
   const themeClasses =
-    theme === "dark" ? "bg-slate-800 text-white border-slate-700" :
-      theme === "primary" ? "bg-blue-500 text-white border-blue-600" :
-        "bg-white text-slate-900 border-slate-200";
+    theme === "dark"
+      ? "bg-slate-800 text-white border-slate-700"
+      : theme === "primary"
+        ? "bg-blue-500 text-white border-blue-600"
+        : "bg-white text-slate-900 border-slate-200";
 
   return (
-    <Card className={`flex flex-col overflow-hidden shadow-sm transition-all hover:shadow-md ${themeClasses} ${gender === 'female' ? 'bg-[#f2a6d2]' : 'bg-[#a6f2cf]'}`}>
+    <Card
+      className={`flex flex-col overflow-hidden shadow-sm transition-all hover:shadow-md ${themeClasses} ${gender === "female" ? "bg-[#f2a6d2]" : "bg-[#a6f2cf]"}`}
+    >
       {gambar && (
         <img
           src={gambar}
@@ -52,7 +63,9 @@ export function CardRenderer({ name, text, gambar, theme, gender }: CardRenderer
         <p className="opacity-80 leading-relaxed text-[#247155] font-body text-lg font-medium ">
           {text}
         </p>
-        <span className="text-[10px] font-bold uppercase tracking-widest text-on-secondary-container opacity-60">-- {name}</span>
+        <span className="text-[10px] font-bold uppercase tracking-widest text-on-secondary-container opacity-60">
+          -- {name}
+        </span>
       </div>
     </Card>
   );
